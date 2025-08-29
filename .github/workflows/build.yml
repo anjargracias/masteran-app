@@ -1,0 +1,32 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller pytube pydub pygame
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile masteran-app/masteran_app.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: masteran-exe
+          path: dist/masteran_app.exe
